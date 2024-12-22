@@ -115,10 +115,17 @@ class ProtocolGeneratorAPI {
               }
             }
 
-            // 找到最后一个 ImportDeclaration 节点然后把需要引入的模块插入到最后
-            if (importDeclarations.length > 0 && needImports.length > 0) {
-              const lastImportPath = path.getSibling(importDeclarations.length - 1);
-              lastImportPath.insertAfter(needImports);
+            // 存在需要插入的模块
+            if (needImports.length) {
+              if (importDeclarations.length) {
+                // 找到最后一个 ImportDeclaration 节点
+                const lastImportPath = path.getSibling(importDeclarations.length - 1);
+                lastImportPath.insertAfter(needImports);
+              } else {
+                // 如果没有 ImportDeclaration，插入到 Program 顶部
+                const programPath = path.parentPath;
+                programPath.unshiftContainer("body", needImports);
+              }
             }
           },
         };
