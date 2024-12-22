@@ -14,10 +14,17 @@ module.exports = (generatorAPI) => {
         imports: [
           {
             dir: "src/App",
-            name: "{ BrowserRouter as Router, Switch, Route }",
-            from: "react-router-dom",
+            module: [
+              {
+                name: "{ BrowserRouter as Router, Switch, Route }",
+                from: "react-router-dom",
+              }
+            ]
           },
         ],
+        astOptions: {
+          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }
+        }
       },
     },
   });

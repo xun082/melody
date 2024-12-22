@@ -14,10 +14,17 @@ module.exports = (generatorAPI) => {
         imports: [
           {
             dir: "src/main",
-            name: "{ createPinia }",
-            from: "pinia",
+            module: [
+              {
+                name: "{ createPinia }",
+                from: "pinia",
+              }
+            ]
           },
         ],
+        astOptions: {
+          parserOptions: { sourceType: "module", plugins: ["typescript"] }
+        }
       },
     },
   });
