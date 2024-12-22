@@ -3,8 +3,9 @@ import path from "path";
 
 import { ProtocolProps } from "../BaseAPI";
 import { getTargetFileData } from "../../utils/commonUtils";
-import { exportDefaultDeclarationUtils } from "../../utils/ast/commonAst";
+import { createImportDeclaration, exportDefaultDeclarationUtils } from "../../utils/ast/commonAst";
 import { transformCode } from "../../utils/ast/utils";
+import { FileData } from "../FileTree";
 
 /**
  * 通用类，为 插件/框架/构建工具 之间的影响定义协议处理器
@@ -49,24 +50,81 @@ class ProtocolGeneratorAPI {
   /**
    * 更新目标文件导出内容协议，根据给定的文件路径和新的导出内容更新文件数据。
    *
-   * @param {Object} params 包含文件路径和新的导出内容的参数对象。
-   * @param {string} params.url 目标文件的路径。
-   * @param {string} params.exportContent 要更新的导出内容。
-   * @param {string} params.parserOptions ast的解析器
+   * @param params 包含文件路径和新的导出内容的参数对象。
+   * @param params.url 目标文件的路径。
+   * @param params.exportContent 要更新的导出内容。
+   * @param params.parserOptions ast的解析器
+   * @param params.astOptions - ast相关配置
    */
   UPDATE_EXPORT_CONTENT_PROTOCOL({ params }) {
     const { url, exportContent, astOptions } = params;
     const { parserOptions } = astOptions;
-    const rootFileTree = this.props.files.getFileData();
-    const fileData = getTargetFileData(rootFileTree, url);
-    const fileContent = fileData.describe.fileContent;
+    const fileData: FileData = this.props.files.getFileData();
+    const targetFile = getTargetFileData(fileData, url);
+    const content = targetFile.describe.fileContent;
     const operations = {
       ExportDefaultDeclaration(path) {
-        const content = exportContent;
-        exportDefaultDeclarationUtils(path, content);
+        exportDefaultDeclarationUtils(path, exportContent);
       },
     };
-    fileData.describe.fileContent = transformCode(fileContent, operations, parserOptions);
+    targetFile.describe.fileContent = transformCode(content, operations, parserOptions);
+  }
+
+  /**
+   * 处理 Import 语句的插入
+   * @param params - 导入配置参数
+   * @param params.imports - 导入配置数组
+   * @param params.imports.dir - 目标文件路径
+   * @param params.imports.module[] - 导入的模块信息
+   * @param params.imports.module[].name - 导入的模块名称
+   * @param params.imports.module[].from - 导入的模块路径
+   * @param params.astOptions - ast相关配置
+   */
+  INSERT_IMPORT_PROTOCOL({ params }) {
+    const { imports, astOptions } = params;
+    const { parserOptions } = astOptions;
+
+    const fileData: FileData = this.props.files.getFileData();
+
+    for (const importConfig of imports) {
+      const { dir, module } = importConfig;
+      const targetFile = getTargetFileData(fileData, dir);
+      if (targetFile?.describe?.fileContent) {
+        const content = targetFile.describe.fileContent;
+        const operations = {
+          // 遍历 AST，找到最后一个 ImportDeclaration 的位置
+          ImportDeclaration(path) {
+            // 当前 Program 节点的所有顶级节点
+            const programBody = path.parent.body;
+            const importDeclarations = programBody.filter(
+              (node) => node.type === "ImportDeclaration",
+            );
+
+            // 映射出当前文件已经引入的模块
+            const existingImports = new Set(importDeclarations.map((node) => node.source.value));
+
+            // 需要插入的import语句
+            const needImports = [];
+            for (let i = 0; i < module.length; i++) {
+              const { name, from } = module[i];
+              // 当前要from的模块是否已经存在
+              const isNeed = !existingImports.has(from);
+              if (isNeed) {
+                const importModule = createImportDeclaration(name, from);
+                needImports.push(importModule);
+              }
+            }
+
+            // 找到最后一个 ImportDeclaration 节点然后把需要引入的模块插入到最后
+            if (importDeclarations.length > 0 && needImports.length > 0) {
+              const lastImportPath = path.getSibling(importDeclarations.length - 1);
+              lastImportPath.insertAfter(needImports);
+            }
+          },
+        };
+        targetFile.describe.fileContent = transformCode(content, operations, parserOptions);
+      }
+    }
   }
 }
 

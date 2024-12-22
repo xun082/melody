@@ -10,9 +10,31 @@ module.exports = (generatorAPI) => {
   });
 
   generatorAPI.protocolGenerate({
+    [pluginToTemplateProtocol.INSERT_IMPORT_PROTOCOL]: {
+      params: {
+        imports: [
+          {
+            dir: "src/App",
+            module: [
+              {
+                name: "mobx",
+                from: "mobx-react-lite",
+              },
+              {
+                name: "store",
+                from: "./store",
+              }
+            ]
+          }
+        ],
+        astOptions: {
+          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }
+        }
+      },
+    },
     [pluginToTemplateProtocol.UPDATE_EXPORT_CONTENT_PROTOCOL]: {
       params: {
-        url: 'src/App.jsx',
+        url: 'src/App',
         exportContent: 'Observer',
         astOptions: {
           parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }

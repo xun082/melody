@@ -1,13 +1,13 @@
 const globalProtocol = {
   ENTRY_FILE: "ENTRY_FILE", // 入口文件配置，如：入口文件引入全局 less、scss
   UPDATE_EXPORT_CONTENT_PROTOCOL: "UPDATE_EXPORT_CONTENT_PROTOCOL",
+  INSERT_IMPORT_PROTOCOL: "INSERT_IMPORT_PROTOCOL",
 };
 
 // 插件对框架的协议
 const pluginToTemplateProtocol = {
   ...globalProtocol,
   PROCESS_STYLE_PLUGIN: "PROCESS_STYLE_PLUGIN",
-  INSERT_IMPORT: "INSERT_IMPORT",
 };
 
 // 插件对构建工具的协议
