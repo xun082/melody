@@ -1,4 +1,5 @@
 import fs from "fs";
+import type { PackageJson } from "pkg-types";
 
 import { createFiles } from "../utils/createFiles";
 /**
@@ -20,12 +21,10 @@ class PackageAPI {
    * 创建 package.json 文件。
    * @async
    * @method
-   * @param {object} content - package.json 文件的内容。
+   * @param {PackageJson} content - package.json 文件的内容。
    * @returns {Promise<void>} Promise 对象，在创建完成后解析。
    */
-  async createPackageJson(content: object) {
-    // todo: content 的类型后面约束
-
+  async createPackageJson(content: PackageJson) {
     await createFiles(this.filePath, {
       "package.json": JSON.stringify(content, null, 2),
     });
@@ -53,10 +52,10 @@ class PackageAPI {
    * 更新 package.json 文件内容。
    * @async
    * @method
-   * @param {object} content - 新的 package.json 文件内容。
+   * @param {PackageJson} content - 新的 package.json 文件内容。
    * @returns {Promise<string>} Promise 对象，在更新完成后解析为成功消息。
    */
-  async updatePackageJson(content: object): Promise<string> {
+  async updatePackageJson(content: PackageJson): Promise<string> {
     return new Promise((resolve, reject) => {
       this.readPackageJson()
         .then((data) => {
