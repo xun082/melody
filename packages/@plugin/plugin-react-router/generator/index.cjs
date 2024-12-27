@@ -14,7 +14,7 @@ module.exports = (generatorAPI) => {
         imports: [
           {
             dir: "src/App",
-            module: [
+            modules: [
               {
                 name: "{ BrowserRouter as Router, Switch, Route }",
                 from: "react-router-dom",

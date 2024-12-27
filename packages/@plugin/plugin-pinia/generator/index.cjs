@@ -14,7 +14,7 @@ module.exports = (generatorAPI) => {
         imports: [
           {
             dir: "src/main",
-            module: [
+            modules: [
               {
                 name: "{ createPinia }",
                 from: "pinia",

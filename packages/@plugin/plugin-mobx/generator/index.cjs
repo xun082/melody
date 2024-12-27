@@ -15,7 +15,7 @@ module.exports = (generatorAPI) => {
         imports: [
           {
             dir: "src/App",
-            module: [
+            modules: [
               {
                 name: "mobx",
                 from: "mobx-react-lite",

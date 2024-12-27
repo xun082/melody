@@ -75,9 +75,9 @@ class ProtocolGeneratorAPI {
    * @param params - 导入配置参数
    * @param params.imports - 导入配置数组
    * @param params.imports.dir - 目标文件路径
-   * @param params.imports.module[] - 导入的模块信息
-   * @param params.imports.module[].name - 导入的模块名称
-   * @param params.imports.module[].from - 导入的模块路径
+   * @param params.imports.modules[] - 导入的模块信息
+   * @param params.imports.modules[].name - 导入的模块名称
+   * @param params.imports.modules[].from - 导入的模块路径
    * @param params.astOptions - ast相关配置
    */
   INSERT_IMPORT_PROTOCOL({ params }) {
@@ -87,7 +87,7 @@ class ProtocolGeneratorAPI {
     const fileData: FileData = this.props.files.getFileData();
 
     for (const importConfig of imports) {
-      const { dir, module } = importConfig;
+      const { dir, modules } = importConfig;
       const targetFile = getTargetFileData(fileData, dir);
       if (targetFile?.describe?.fileContent) {
         const content = targetFile.describe.fileContent;
@@ -105,8 +105,8 @@ class ProtocolGeneratorAPI {
 
             // 需要插入的import语句
             const needImports = [];
-            for (let i = 0; i < module.length; i++) {
-              const { name, from } = module[i];
+            for (let i = 0; i < modules.length; i++) {
+              const { name, from } = modules[i];
               // 当前要from的模块是否已经存在
               const isNeed = !existingImports.has(from);
               if (isNeed) {
