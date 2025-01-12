@@ -18,13 +18,13 @@ module.exports = (generatorAPI) => {
               {
                 name: "{ BrowserRouter as Router, Switch, Route }",
                 from: "react-router-dom",
-              }
-            ]
+              },
+            ],
           },
         ],
         astOptions: {
-          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }
-        }
+          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] },
+        },
       },
     },
   });

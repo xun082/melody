@@ -66,6 +66,11 @@ export const buildToolScripts = {
   },
 };
 
+export const templateFileExtension = {
+  js: "ts",
+  jsx: "tsx",
+};
+
 function detectOS() {
   const platform = process.platform;
   if (platform === "win32") {

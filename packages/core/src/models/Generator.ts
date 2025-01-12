@@ -307,7 +307,12 @@ class Generator {
       },
     };
 
-    this.files.addToTreeByTemplateDirPathAndEjs(templatePath, this.rootDirectory, options);
+    this.files.addToTreeByTemplateDirPathAndEjs(
+      templatePath,
+      this.rootDirectory,
+      options,
+      process.env.isTs,
+    );
 
     // 为每个 plugin 创建 GeneratorAPI 实例，调用插件中的 generate
     for (const pluginName of Object.keys(this.plugins)) {
