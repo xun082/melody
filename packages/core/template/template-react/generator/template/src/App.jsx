@@ -2,7 +2,9 @@ import React from "react";
 import "./index.css";
 
 function App() {
+  // <!--slot: store-slot -->
   return (
+    // <!--slot: router-start-slot -->
     <div className="container">
       <header className="header">
         <h1 className="title">create-neat</h1>
@@ -80,6 +82,7 @@ function App() {
         <div className="footer_text">Copyright © 2023-present Moment</div>
       </footer>
     </div>
+    // <!--slot: router-end-slot -->
   );
 }
 

@@ -17,7 +17,7 @@ module.exports = (generatorAPI) => {
             dir: "src/App",
             modules: [
               {
-                name: "mobx",
+                name: "{ observer }",
                 from: "mobx-react-lite",
               },
               {
@@ -35,11 +35,22 @@ module.exports = (generatorAPI) => {
     [pluginToTemplateProtocol.UPDATE_EXPORT_CONTENT_PROTOCOL]: {
       params: {
         url: 'src/App',
-        exportContent: 'Observer',
+        exportContent: 'observer',
         astOptions: {
           parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }
         }
       },
     },
+    [pluginToTemplateProtocol.SLOT_CONTENT_PROTOCOL]: {
+      params: {
+        slotConfig: [
+          {
+            url: 'src/App',
+            slotName: 'store-slot',
+            slotContent: "console.log('当前store的number值为: ', store.number);",
+          }
+        ]
+      },
+    }
   });
 };

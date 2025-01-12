@@ -27,5 +27,21 @@ module.exports = (generatorAPI) => {
         }
       },
     },
+    [pluginToTemplateProtocol.SLOT_CONTENT_PROTOCOL]: {
+      params: {
+        slotConfig: [
+          {
+            url: 'src/App',
+            slotName: 'router-start-slot',
+            slotContent: "<Router>",
+          },
+          {
+            url: 'src/App',
+            slotName: 'router-end-slot',
+            slotContent: "</Router>",
+          }
+        ]
+      },
+    },
   });
 };
