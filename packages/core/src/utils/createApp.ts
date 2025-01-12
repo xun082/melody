@@ -16,6 +16,7 @@ import createSuccessInfo from "./createSuccessInfo";
 import dependenciesInstall from "./dependenciesInstall";
 import { createReadmeString } from "./createFiles";
 import { buildToolConfigDevDependencies, buildToolScripts } from "./constants";
+import PackageAPI from "../models/PackageAPI";
 
 /**
  * 将输入模式设置为原始模式。
@@ -141,6 +142,9 @@ export default async function createAppTest(projectName: string, options: Record
       delete packageContent.devDependencies["babel"];
     }
   });
+
+  const packageJson = new PackageAPI(rootDirectory);
+  await packageJson.createPackageJson(packageContent);
 
   // 初始化 Git 仓库
   if (gitCheck(rootDirectory)) exec("git init", { cwd: rootDirectory });

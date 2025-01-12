@@ -1,4 +1,10 @@
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import generator from "@babel/generator";
+
 import { FileData } from "../FileTree";
+import { createImportDeclaration } from "../../utils/ast/commonAst";
+import { getTargetFileData } from "../../utils/commonUtils";
 
 import ProtocolGeneratorAPI from "./ProtocolGeneratorAPI";
 
@@ -37,6 +43,14 @@ class PluginToTemplateAPI extends ProtocolGeneratorAPI {
     } catch (error) {
       console.log(error);
     }
+  }
+  /**
+   * 处理文件渲染和生成
+   */
+  RENDER_FILE(params) {
+    const files = params.params.files;
+    const content = params.params.content;
+    content.fileRender(files);
   }
 }
 
