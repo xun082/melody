@@ -38,6 +38,7 @@ class PluginToTemplateAPI extends ProtocolGeneratorAPI {
       console.log(error);
     }
   }
+  
    /**
    * 处理文件渲染和生成
    */
