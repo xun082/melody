@@ -66,6 +66,10 @@ export const buildToolScripts = {
   },
 };
 
+/**
+ * 用于处理文件树扩展名修改
+ * 例如：js -> ts，jsx -> tsx
+ */
 export const templateFileExtension = {
   js: "ts",
   jsx: "tsx",

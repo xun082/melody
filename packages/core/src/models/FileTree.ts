@@ -99,16 +99,28 @@ class FileTree {
     } else {
       const fileContent = fs.readFileSync(src, "utf8");
       file.type = "file";
+      // 在选择ts后,拉取插件template文件中如若有js/jsx则需要转换为ts/tsx
+      const transformResult =
+        process.env.isTs === "true"
+          ? this.transformFileExtension(fileContent, path.extname(src).slice(1))
+          : { fileExtension: path.extname(src).slice(1), fileContent: fileContent };
+
       file.describe = {
         fileName: path.basename(src).split(".")[0],
-        fileExtension: path.extname(src).slice(1),
-        fileContent,
+        ...transformResult,
       };
     }
     return file;
   }
 
-  private transformFileExtension(fileContent: string, fileName: string, fileExtension: string) {
+  /**
+   * 处理文件扩展名，可增加js->ts，jsx->tsx文件内容fileContent转换代码
+   * @param fileContent 文件内容
+   * @param fileName 文件名称
+   * @param fileExtension 文件扩展名
+   * @returns 处理后的文件扩展名和文件内容
+   */
+  private transformFileExtension(fileContent: string, fileExtension: string) {
     const result = {
       fileExtension,
       fileContent,
@@ -126,7 +138,7 @@ class FileTree {
    * @param parentDir 父目录
    * @param options ejs选项
    */
-  private buildFileDataByEjs(src: string, parentDir: string, options: any, isTs: any) {
+  private buildFileDataByEjs(src: string, parentDir: string, options: any) {
     const baseName = path.basename(src);
     const file: any = {
       path: "",
@@ -144,7 +156,6 @@ class FileTree {
           path.join(src, entry.name),
           path.relative(parentDir, baseName),
           options,
-          isTs,
         );
         file.children?.push(subTree);
       }
@@ -153,12 +164,8 @@ class FileTree {
 
       // 转换文件后缀js -> ts，.jsx -> .tsx
       const transformResult =
-        isTs === "true"
-          ? this.transformFileExtension(
-              fileContent,
-              path.basename(src).split(".")[0],
-              path.extname(src).slice(1),
-            )
+        process.env.isTs === "true"
+          ? this.transformFileExtension(fileContent, path.extname(src).slice(1))
           : { fileExtension: path.extname(src).slice(1), fileContent: fileContent };
 
       // EJS 渲染
@@ -197,18 +204,13 @@ class FileTree {
    * @param url 添加文件的原始的真实路径
    * @param parentDir 父文件夹路径
    */
-  addToTreeByTemplateDirPathAndEjs(url: string, parentDir: string, options: any, isTs: any) {
+  addToTreeByTemplateDirPathAndEjs(url: string, parentDir: string, options: any) {
     if (path.basename(url) === "template") {
       const entries = fs.readdirSync(url, {
         withFileTypes: true,
       });
       for (const entry of entries) {
-        const subTree = this.buildFileDataByEjs(
-          path.join(url, entry.name),
-          parentDir,
-          options,
-          isTs,
-        );
+        const subTree = this.buildFileDataByEjs(path.join(url, entry.name), parentDir, options);
         this.fileData.children.push(subTree);
       }
     }
