@@ -1,4 +1,5 @@
 import prettier from "prettier";
+import prettierPluginVue from "prettier-plugin-vue";
 
 const needFormat = ["ts", "tsx", "js", "jsx", "vue"];
 
@@ -14,7 +15,8 @@ const formatCode = async (code: string, extension: string) => {
   // 移除形如 `// <!--slot: xxx-xxx-xxx -->` 的注释标记
   const result = code.replace(/\/\/\s*<!--slot:\s*\w+-\w+-\w+\s*-->/g, "");
   const formatted = await prettier.format(result, {
-    parser: "babel",
+    parser: extension === "vue" ? "vue" : "babel",
+    plugins: [prettierPluginVue], // 引入 Vue 插件
   });
   return formatted;
 };

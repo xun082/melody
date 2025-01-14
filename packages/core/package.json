@@ -52,6 +52,7 @@
     "latest-version": "^5.1.0",
     "minimist": "^1.2.8",
     "ora": "^5.4.1",
+    "prettier-plugin-vue": "^1.1.6",
     "semver": "^7.6.3",
     "tar": "^6.2.0"
   },
