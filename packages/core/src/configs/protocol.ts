@@ -8,6 +8,8 @@ const globalProtocol = {
 const pluginToTemplateProtocol = {
   ...globalProtocol,
   PROCESS_STYLE_PLUGIN: "PROCESS_STYLE_PLUGIN",
+  INSERT_IMPORT: "INSERT_IMPORT",
+  RENDER_FILE: "RENDER_FILE",
 };
 
 // 插件对构建工具的协议
@@ -21,7 +23,7 @@ const templateToBuildToolProtocol = {
   ADD_CONFIG: "ADD_CONFIG", //根据框架，不同的打包工具需要不同的插件，有些是都需要用的，有些是框架独有的
 };
 
-module.exports = {
+export const Protocols = {
   globalProtocol,
   pluginToTemplateProtocol,
   pluginToBuildToolProtocol,
