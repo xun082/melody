@@ -43,7 +43,7 @@ export const getTargetFileData = (rootFileData: FileData, filePath: string) => {
  */
 export function replaceDynamicSlot(inputString: string, slotName: string, replacementCode: string) {
   // 动态生成正则表达式，匹配包含指定 slotName 的占位符
-  const regex = new RegExp(`\\/\\/\\s*<!--slot: ${slotName} -->`, "g");
+  const regex = new RegExp(`\\/\\*\\s*slot:\\s*${slotName}\\s*\\*\\/`, "g");
 
   // 使用传入的 replacementCode 替换匹配到的内容
   const result = inputString.replace(regex, replacementCode);

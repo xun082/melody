@@ -47,7 +47,7 @@ module.exports = (generatorAPI) => {
           {
             url: 'src/App',
             slotName: 'store-slot',
-            slotContent: "console.log('当前store的number值为: ', store.number);",
+            slotContent: "console.log('当前store的number值为: ', store.number);", // 提示用户store的number值生效
           }
         ]
       },
