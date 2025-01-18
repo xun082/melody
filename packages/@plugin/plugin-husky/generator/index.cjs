@@ -14,79 +14,66 @@ function fileRender(files) {
   }
 }
 
-const basicConfig = {
-  scripts: {
-    postinstall: "husky install",
-    "commit-msg": "commitlint --edit $1",
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ["pnpm format:ci", "pnpm lint:ci"],
-  },
-  devDependencies: {
-    husky: "^9.0.11",
-    "lint-staged": "^15.2.0",
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
-  },
-};
-
-const generateBasicConfig = (generatorAPI) => {
-  generatorAPI.extendPackage(basicConfig);
-  generatorAPI.protocolGenerate({
-    [pluginToTemplateProtocol.RENDER_FILE]: {
-      params: {
-        files: {
-          ".commitlintrc.js": `module.exports = {
-            extends: ["@commitlint/config-conventional"]
-          }`,
-        },
-        content: {
-          fileRender,
-        },
-      },
-    },
-  });
-};
-
-const generateStrictConfig = (generatorAPI) => {
-  generatorAPI.extendPackage({
-    ...basicConfig,
+const basicConfig = (preset) => {
+  return {
     scripts: {
-      ...basicConfig.scripts,
-      "pre-commit": "lint-staged && npm run test",
+      postinstall: "husky install",
+      "commit-msg": "commitlint --edit $1",
     },
     "lint-staged": {
-      ...basicConfig["lint-staged"],
-      "*.{css,scss,less}": ["pnpm stylelint"],
+      "*.{ts,tsx,js,jsx}": [`${preset} format:ci`, `${preset} lint:ci`],
     },
     devDependencies: {
-      ...basicConfig.devDependencies,
+      husky: "^9.0.11",
+      "lint-staged": "^15.2.0",
+      "@commitlint/cli": "^18.4.3",
+      "@commitlint/config-conventional": "^18.4.3",
+    },
+  }
+};
+
+const generateBasicConfig = (generatorAPI, preset) => {
+  generatorAPI.extendPackage(basicConfig(preset));
+  const files = {
+    ".commitlintrc.js": `module.exports = {
+      extends: ["@commitlint/config-conventional"]
+    }`,
+  };
+  fileRender(files);
+};
+
+const generateStrictConfig = (generatorAPI, preset) => {
+  const res = basicConfig(preset);
+  generatorAPI.extendPackage({
+    ...res,
+    scripts: {
+      ...res.scripts,
+      "pre-commit": `lint-staged && ${preset} run test`,
+    },
+    "lint-staged": {
+      ...res["lint-staged"],
+      "*.{css,scss,less}": [`${preset} stylelint`],
+    },
+    devDependencies: {
+      ...res.devDependencies,
       stylelint: "^15.10.0",
     },
   });
-  generatorAPI.protocolGenerate({
-    [pluginToTemplateProtocol.RENDER_FILE]: {
-      params: {
-        files: {
-          ".commitlintrc.js": `module.exports ={
-            extends:["@commitlint/config-conventional"],
-            rules:{
-              'body-max-line-length':[2,'always',100],
-              'subject-case':[2,'always','lower-case'],
-              'type-enum':[
-                2,
-                'always',
-                ['feat','fix','docs','style','refactor','perf','test','chore','revert']
-              ]
-            }
-          }`,
-        },
-        content: {
-          fileRender,
-        },
-      },
-    },
-  });
+  const files = {
+    ".commitlintrc.js": `module.exports ={
+      extends:["@commitlint/config-conventional"],
+      rules:{
+        'body-max-line-length':[2,'always',100],
+        'subject-case':[2,'always','lower-case'],
+        'type-enum':[
+          2,
+          'always',
+          ['feat','fix','docs','style','refactor','perf','test','chore','revert']
+        ]
+      }
+    }`,
+  };
+  fileRender(files);
 };
 
 const configs = {
@@ -94,11 +81,12 @@ const configs = {
   strict: generateStrictConfig,
 };
 
-module.exports = (generatorAPI, configType = "basic") => {
+module.exports = (generatorAPI, curPreset, configType = "basic") => {
   const generator = configs[configType];
+  const preset = JSON.parse(curPreset);
   if (!generator) {
     console.warn(`不支持的配置类型：${configType}`);
-    return configs.basic(generatorAPI);
+    return configs.basic(generatorAPI, preset);
   }
   return generator(generatorAPI);
 };

@@ -9,7 +9,6 @@ const pluginToTemplateProtocol = {
   ...globalProtocol,
   PROCESS_STYLE_PLUGIN: "PROCESS_STYLE_PLUGIN",
   INSERT_IMPORT: "INSERT_IMPORT",
-  RENDER_FILE: "RENDER_FILE",
 };
 
 // 插件对构建工具的协议
