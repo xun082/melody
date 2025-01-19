@@ -1,4 +1,4 @@
-import { resolveApp } from "@laconic/utils";
+const { resolveApp } = require("@laconic/utils");
 import fs from "fs-extra";
 import { exec } from "child_process";
 import { confirm } from "@clack/prompts";
@@ -6,6 +6,7 @@ import chalk from "chalk";
 import path from "path";
 
 import Generator from "../models/Generator";
+import PackageAPI from "../models/PackageAPI";
 
 import { removeDirectory, readTemplateFileContent } from "./fileController";
 import { projectSelect } from "./select";
@@ -141,6 +142,9 @@ export default async function createAppTest(projectName: string, options: Record
       delete packageContent.devDependencies["babel"];
     }
   });
+
+  const packageJson = new PackageAPI(rootDirectory);
+  await packageJson.createPackageJson(packageContent);
 
   // 初始化 Git 仓库
   if (gitCheck(rootDirectory)) exec("git init", { cwd: rootDirectory });

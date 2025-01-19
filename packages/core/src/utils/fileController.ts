@@ -1,4 +1,4 @@
-import { resolveApp } from "@laconic/utils";
+const { resolveApp } = require("@laconic/utils");
 import chalk from "chalk";
 import ora from "ora";
 import fs, { readFileSync } from "fs-extra";

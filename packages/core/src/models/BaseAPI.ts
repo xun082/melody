@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import * as Protocols from "../configs/protocol";
+const Protocols = require("../configs/protocol");
 import { Preset } from "../utils/preset";
 
 import Generator from "./Generator";
