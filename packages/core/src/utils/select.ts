@@ -158,7 +158,7 @@ async function projectSelect() {
     react: [
       { key: "mobx", value: "mobx" },
       { key: "react-router", value: "react-router" },
-      { key: "antd", value: "antd" },
+      // { key: "antd", value: "antd" },
       {
         key: "null",
         value: chalk.greenBright(skip),
@@ -166,8 +166,8 @@ async function projectSelect() {
       },
     ],
     vue: [
-      { key: "vuex", value: "vuex" },
-      { key: "vue-router", value: "vue-router" },
+      // { key: "vuex", value: "vuex" },
+      // { key: "vue-router", value: "vue-router" },
       { key: "element-plus", value: "element-plus" },
       { key: "pinia", value: "pinia" },
       {

@@ -3,6 +3,7 @@ import fs from "fs-extra";
 import ejs from "ejs";
 
 import { createFiles } from "../utils/createFiles";
+import { templateFileExtension } from "../utils/constants";
 import formatCode from "../utils/formatCode";
 
 import PluginToTemplateAPI from "./protocolGenerator/PluginToTemplateAPI";
@@ -99,13 +100,34 @@ class FileTree {
     } else {
       const fileContent = fs.readFileSync(src, "utf8");
       file.type = "file";
+      // 在选择ts后,拉取插件template文件中如若有js/jsx则需要转换为ts/tsx
+      const transformResult =
+        process.env.isTs === "true"
+          ? this.transformFileExtension(fileContent, path.extname(src).slice(1))
+          : { fileExtension: path.extname(src).slice(1), fileContent: fileContent };
+
       file.describe = {
         fileName: path.basename(src).split(".")[0],
-        fileExtension: path.extname(src).slice(1),
-        fileContent,
+        ...transformResult,
       };
     }
     return file;
+  }
+
+  /**
+   * 处理文件扩展名，可增加js->ts，jsx->tsx文件内容fileContent转换代码
+   * @param fileContent 文件内容
+   * @param fileName 文件名称
+   * @param fileExtension 文件扩展名
+   * @returns 处理后的文件扩展名和文件内容
+   */
+  private transformFileExtension(fileContent: string, fileExtension: string) {
+    const result = { fileExtension, fileContent };
+
+    if (Object.keys(templateFileExtension).includes(fileExtension)) {
+      result.fileExtension = templateFileExtension[fileExtension];
+    }
+    return result;
   }
 
   /**
@@ -136,16 +158,23 @@ class FileTree {
         file.children?.push(subTree);
       }
     } else {
-      let fileContent = fs.readFileSync(src, "utf8");
+      const fileContent = fs.readFileSync(src, "utf8");
+
+      // 转换文件后缀 .js -> .ts,.jsx -> .tsx
+      const transformResult =
+        process.env.isTs === "true"
+          ? this.transformFileExtension(fileContent, path.extname(src).slice(1))
+          : { fileExtension: path.extname(src).slice(1), fileContent: fileContent };
+
       // EJS 渲染
-      fileContent = ejs.render(fileContent, options);
 
       file.type = "file";
       file.describe = {
         fileName: path.basename(src).split(".")[0],
-        fileExtension: path.extname(src).slice(1),
-        fileContent,
+        fileExtension: transformResult.fileExtension,
+        fileContent: ejs.render(transformResult.fileContent, options),
       };
+
       file.path = path.resolve(
         parentDir,
         `${file.describe.fileName}.${file.describe.fileExtension}`,
