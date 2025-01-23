@@ -66,6 +66,15 @@ export const buildToolScripts = {
   },
 };
 
+/**
+ * 模板文件后缀
+ * @type {Object<string, string>}
+ */
+export const templateFileExtension = {
+  js: "ts",
+  jsx: "tsx",
+};
+
 function detectOS() {
   const platform = process.platform;
   if (platform === "win32") {

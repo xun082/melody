@@ -18,25 +18,25 @@ module.exports = (generatorAPI) => {
               {
                 name: "pinia",
                 from: "./store",
-              }
-            ]
+              },
+            ],
           },
         ],
         astOptions: {
-          parserOptions: { sourceType: "module", plugins: ["typescript"] }
-        }
+          parserOptions: { sourceType: "module", plugins: ["typescript"] },
+        },
       },
     },
     [pluginToTemplateProtocol.SLOT_CONTENT_PROTOCOL]: {
       params: {
         slotConfig: [
           {
-            url: 'src/main',
-            slotName: 'use-pinia-slot',
+            url: "src/main",
+            slotName: "use-pinia-slot",
             slotContent: "app.use(pinia);",
-          }
-        ]
+          },
+        ],
       },
-    }
+    },
   });
 };

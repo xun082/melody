@@ -45,8 +45,19 @@ export const getNpmSource = () => {
       // 使用 Promise.race 找出哪个源最快，并用 await 等待结果
       const fastestSource: Source = await Promise.race(promises);
 
-      // 将最快源的 registry 添加到 npmSources 中
-      npmSources.push({ label: "Fastest source", value: fastestSource.sourceName.registry });
+      // 找到最快源对应的名称
+      const fastestName =
+        Object.keys(npmRegistries).find(
+          (name) => npmRegistries[name].registry === fastestSource.sourceName.registry,
+        ) || "";
+
+      // 将最快源添加到数组开头
+      if (fastestName) {
+        npmSources.unshift({
+          label: `Fastest source (${fastestName})`,
+          value: fastestSource.sourceName.registry,
+        });
+      }
     } catch (error) {
       console.error("检测源速度时发生错误:", error);
     }

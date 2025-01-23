@@ -18,29 +18,29 @@ module.exports = (generatorAPI) => {
               {
                 name: "{ BrowserRouter as Router, Switch, Route }",
                 from: "react-router-dom",
-              }
-            ]
+              },
+            ],
           },
         ],
         astOptions: {
-          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }
-        }
+          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] },
+        },
       },
     },
     [pluginToTemplateProtocol.SLOT_CONTENT_PROTOCOL]: {
       params: {
         slotConfig: [
           {
-            url: 'src/App',
-            slotName: 'router-start-slot',
+            url: "src/App",
+            slotName: "router-start-slot",
             slotContent: "<Router>",
           },
           {
-            url: 'src/App',
-            slotName: 'router-end-slot',
+            url: "src/App",
+            slotName: "router-end-slot",
             slotContent: "</Router>",
-          }
-        ]
+          },
+        ],
       },
     },
   });
