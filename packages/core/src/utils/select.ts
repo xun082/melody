@@ -214,7 +214,7 @@ async function projectSelect() {
     // 选择npm源
     responses.npmSource = (await select({
       message: "Pick a npm source for your project",
-      initialValue: registryInfo,
+      initialValue: presetName ? registryInfo : npmSource.length && npmSource[0].value,
       options: npmSource,
     })) as string;
   }
