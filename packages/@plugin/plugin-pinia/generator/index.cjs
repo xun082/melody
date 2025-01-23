@@ -31,8 +31,8 @@ module.exports = (generatorAPI) => {
       params: {
         slotConfig: [
           {
-            url: 'src/main',
-            slotName: 'use-pinia-slot',
+            url: "src/main",
+            slotName: "use-pinia-slot",
             slotContent: "app.use(pinia);",
           },
         ],

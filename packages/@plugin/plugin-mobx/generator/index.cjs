@@ -23,13 +23,13 @@ module.exports = (generatorAPI) => {
               {
                 name: "store",
                 from: "./store",
-              }
-            ]
-          }
+              },
+            ],
+          },
         ],
         astOptions: {
-          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] }
-        }
+          parserOptions: { sourceType: "module", plugins: ["typescript", "jsx"] },
+        },
       },
     },
     [pluginToTemplateProtocol.UPDATE_EXPORT_CONTENT_PROTOCOL]: {
