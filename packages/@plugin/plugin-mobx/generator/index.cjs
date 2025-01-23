@@ -17,7 +17,7 @@ module.exports = (generatorAPI) => {
             dir: "src/App",
             modules: [
               {
-                name: "mobx",
+                name: "{ observer }",
                 from: "mobx-react-lite",
               },
               {
@@ -41,5 +41,16 @@ module.exports = (generatorAPI) => {
         },
       },
     },
+    [pluginToTemplateProtocol.SLOT_CONTENT_PROTOCOL]: {
+      params: {
+        slotConfig: [
+          {
+            url: 'src/App',
+            slotName: 'store-slot',
+            slotContent: "console.log('当前store的number值为: ', store.number);", // 提示用户store的number值生效
+          }
+        ]
+      },
+    }
   });
 };

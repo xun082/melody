@@ -27,5 +27,16 @@ module.exports = (generatorAPI) => {
         },
       },
     },
+    [pluginToTemplateProtocol.SLOT_CONTENT_PROTOCOL]: {
+      params: {
+        slotConfig: [
+          {
+            url: 'src/main',
+            slotName: 'use-pinia-slot',
+            slotContent: "app.use(pinia);",
+          }
+        ]
+      },
+    }
   });
 };

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import { ProtocolProps } from "../BaseAPI";
-import { getTargetFileData } from "../../utils/commonUtils";
+import { getTargetFileData, replaceDynamicSlot } from "../../utils/commonUtils";
 import { createImportDeclaration, exportDefaultDeclarationUtils } from "../../utils/ast/commonAst";
 import { transformCode } from "../../utils/ast/utils";
 import { FileData } from "../FileTree";
@@ -131,6 +131,28 @@ class ProtocolGeneratorAPI {
         };
         targetFile.describe.fileContent = transformCode(content, operations, parserOptions);
       }
+    }
+  }
+
+  /**
+   * 对模板文件进行插槽操作
+   * @param params - 配置参数
+   * @param params.slotConfig - 插槽的配置
+   * @param params.slotConfig.url - 目标文件路径
+   * @param params.slotConfig.slotName - 插槽名
+   * @param params.slotConfig.slotContent - 插入的插槽内容
+   */
+  SLOT_CONTENT_PROTOCOL({ params }) {
+    const { slotConfig } = params;
+    const fileData: FileData = this.props.files.getFileData();
+    for (const slot of slotConfig) {
+      const { url, slotName, slotContent } = slot;
+      const targetFile = getTargetFileData(fileData, url);
+      targetFile.describe.fileContent = replaceDynamicSlot(
+        targetFile.describe.fileContent,
+        slotName,
+        slotContent,
+      );
     }
   }
 }

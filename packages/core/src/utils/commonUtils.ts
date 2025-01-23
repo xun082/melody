@@ -33,3 +33,20 @@ export const getTargetFileData = (rootFileData: FileData, filePath: string) => {
   }
   return targetFileData;
 };
+
+/**
+ * 替换指定字符串中的动态 slot 占位符为提供的代码。
+ * @param {string} inputString 输入的原始字符串。
+ * @param {string} slotName 动态 slot 的名称，标识要替换的占位符，如 "store-slot"。
+ * @param {string} replacementCode 替换的代码内容，将插入到匹配的占位符位置。
+ * @returns {string} 替换后的字符串，其中指定的 slot 被替换为提供的代码内容。
+ */
+export function replaceDynamicSlot(inputString: string, slotName: string, replacementCode: string) {
+  // 动态生成正则表达式，匹配包含指定 slotName 的占位符
+  const regex = new RegExp(`\\/\\*\\s*slot:\\s*${slotName}\\s*\\*\\/`, "g");
+
+  // 使用传入的 replacementCode 替换匹配到的内容
+  const result = inputString.replace(regex, replacementCode);
+
+  return result;
+}

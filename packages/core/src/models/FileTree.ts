@@ -4,6 +4,7 @@ import ejs from "ejs";
 
 import { createFiles } from "../utils/createFiles";
 import { templateFileExtension } from "../utils/constants";
+import formatCode from "../utils/formatCode";
 
 import PluginToTemplateAPI from "./protocolGenerator/PluginToTemplateAPI";
 /**
@@ -255,7 +256,10 @@ class FileTree {
       } else {
         // 如果是文件类型直接生成
         const fileName = `${item.describe.fileName}.${item.describe.fileExtension}`;
-        const fileContent = item.describe.fileContent;
+        const fileContent = await formatCode(
+          item.describe.fileContent,
+          item.describe.fileExtension,
+        );
         await createFiles(parentDir, {
           [fileName]: fileContent,
         });
